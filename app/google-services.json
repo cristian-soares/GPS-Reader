@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "833485789458",
+    "firebase_url": "https://gps-reader-8eb30-default-rtdb.firebaseio.com",
+    "project_id": "gps-reader-8eb30",
+    "storage_bucket": "gps-reader-8eb30.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:833485789458:android:93d0ec34a302170d11fbcb",
+        "android_client_info": {
+          "package_name": "com.example.gpsreader"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAljQE3xrhedyps5mG9mcZuLuNbcUeEYQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

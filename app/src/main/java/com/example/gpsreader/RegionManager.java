@@ -3,6 +3,11 @@ package com.example.gpsreader;
 import com.example.android_lib.Region;
 import com.example.android_lib.SubRegion;
 import com.example.android_lib.RestrictedRegion;
+import com.example.android_lib.Cryptography;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -107,7 +112,9 @@ public class RegionManager extends Thread {
             semaphore.acquire();
             for (Region region : regions) {
                 region.setLoadedFromFirebase(true);
-                regionQueue.offer(region);
+                if (!regionQueue.contains(region)) { // Evita duplicatas na fila
+                    regionQueue.offer(region);
+                }
             }
             semaphore.release();
         } catch (InterruptedException e) {

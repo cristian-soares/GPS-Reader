@@ -32,19 +32,17 @@ public class DataUploader extends Thread {
                 String regionJson = gson.toJson(region);
                 String encryptedRegionJson = Cryptography.encrypt(regionJson);
                 databaseReference.push().setValue(encryptedRegionJson);
-                region.setLoadedFromFirebase(true); // Marca a região como carregada do Firebase
             }
         }
 
         if (hasNewRegions) {
             mainActivity.runOnUiThread(() -> Toast.makeText(mainActivity, "Novas regiões gravadas no BD", Toast.LENGTH_SHORT).show());
-            regionManager.clearQueue(); // Limpa a fila após salvar as novas regiões
         } else {
             mainActivity.runOnUiThread(() -> Toast.makeText(mainActivity, "Sem regiões novas para gravar", Toast.LENGTH_SHORT).show());
         }
 
         try {
-            Thread.sleep(1500); // Espera antes de parar a thread
+            Thread.sleep(1500); // Espera um pouco antes de parar a thread
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

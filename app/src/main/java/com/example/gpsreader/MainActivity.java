@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private DatabaseReference reference;
     private List<Region> loadedRegions;
     private boolean zoom = false;
-    private boolean regionsLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +76,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 try {
                     LatLng currentLocation = new LatLng(gps.getLatitude(), gps.getLongitude());
-                    long timestamp = System.nanoTime(); // Adiciona timestamp
-                    int user = 1; // Adicione seu próprio usuário
-                    Region region = new Region("Localização", currentLocation.latitude, currentLocation.longitude, user, timestamp);
+                    Region region = new Region("Localização", currentLocation.latitude, currentLocation.longitude, 1);
                     regionManager.addRegion(region);
                     if (regionManager.getNotification()) {
                         String regionTypeMessage = "Região adicionada à fila!";
@@ -119,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         reference = FirebaseDatabase.getInstance().getReference();
         loadedRegions = new ArrayList<>();
-        loadRegionsFromFirebase();
         getLastLocation();
     }
 
@@ -203,7 +199,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         dataUploader.start();
     }
 
-
     private void showRegions() {
         List<Region> regions = new ArrayList<>(loadedRegions);
         regions.addAll(regionManager.getRegionQueue());
@@ -211,6 +206,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         intent.putExtra("regions", new ArrayList<>(regions));
         startActivity(intent);
     }
+
+    private boolean regionsLoaded = false; // Nova variável para verificar se as regiões foram carregadas
 
     private void loadRegionsFromFirebase() {
         if (regionsLoaded) {
@@ -245,14 +242,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             }
 
                             region.setLoadedFromFirebase(true); // Marca a região como carregada do Firebase
-                            regions.add(region);
+                            if (!loadedRegions.contains(region)) { // Verifica se a região já está carregada
+                                loadedRegions.add(region);
+                            }
                             Log.d(TAG, "Região carregada: " + region.getType() + ", tipo: " + type);
                         } catch (Exception e) {
                             Log.e(TAG, "Erro ao carregar região do Firebase: ", e);
                         }
                     }
                 }
-                loadedRegions.addAll(regions); // Adiciona as novas regiões carregadas
                 regionManager.loadRegionsFromFirebase(regions); // Adiciona as regiões carregadas na manager
                 regionsLoaded = true; // Marca que as regiões foram carregadas
                 Toast.makeText(MainActivity.this, "Regiões carregadas do Firebase.", Toast.LENGTH_SHORT).show();
@@ -279,3 +277,4 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         regionManager.stopRegionManager();
     }
 }
+

@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private DatabaseReference reference;
     private List<Region> loadedRegions;
     private boolean zoom = false;
+    private boolean regionsLoaded = false; // Variável para verificar se as regiões foram carregadas
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         regionManager = new RegionManager();
         regionManager.start();
+
+        // Carregar regiões do Firebase ao iniciar o aplicativo
+        loadRegionsFromFirebase();
 
         addRegionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,8 +211,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         startActivity(intent);
     }
 
-    private boolean regionsLoaded = false; // Nova variável para verificar se as regiões foram carregadas
-
     private void loadRegionsFromFirebase() {
         if (regionsLoaded) {
             Toast.makeText(MainActivity.this, "Regiões já foram carregadas do Firebase.", Toast.LENGTH_SHORT).show();
@@ -266,8 +268,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void loadRegionsFromFirebaseAndShow() {
         if (!regionsLoaded) {
             loadRegionsFromFirebase();
+        } else {
+            showRegions();
         }
-        showRegions();
     }
 
     @Override
@@ -277,4 +280,3 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         regionManager.stopRegionManager();
     }
 }
-

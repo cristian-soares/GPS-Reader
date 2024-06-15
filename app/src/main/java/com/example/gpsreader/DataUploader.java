@@ -37,6 +37,7 @@ public class DataUploader extends Thread {
 
         if (hasNewRegions) {
             mainActivity.runOnUiThread(() -> Toast.makeText(mainActivity, "Novas regiões gravadas no BD", Toast.LENGTH_SHORT).show());
+            regionManager.clearQueue(); // Limpa a fila após gravar os dados no Firebase
         } else {
             mainActivity.runOnUiThread(() -> Toast.makeText(mainActivity, "Sem regiões novas para gravar", Toast.LENGTH_SHORT).show());
         }

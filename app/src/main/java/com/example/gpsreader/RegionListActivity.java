@@ -2,14 +2,14 @@ package com.example.gpsreader;
 
 import static android.service.controls.ControlsProviderService.TAG;
 
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.android_lib.Region;
+import com.example.android_lib.SubRegion;
+import com.example.android_lib.RestrictedRegion;
 
 import java.util.ArrayList;
 
@@ -32,15 +32,13 @@ public class RegionListActivity extends AppCompatActivity {
 
         ArrayList<String> regionDetails = new ArrayList<>();
         for (Region region : regions) {
-            String regionType = region.getClass().getSimpleName();
+            String regionType = region.getClass().getSimpleName(); // Usar o nome da classe para determinar o tipo
             Log.d(TAG, "Região: " + region.getName() + ", Tipo: " + regionType);
 
             String regionDetail = "Nome: " + region.getName() + "\n" +
                     "Latitude: " + region.getLatitude() + "\n" +
                     "Longitude: " + region.getLongitude() + "\n" +
-                    "Tipo: " + regionType + "\n" +
-                    "Usuário: " + region.getUser() + "\n" +
-                    "Timestamp: " + region.getTimestamp();
+                    "Tipo: " + regionType;
             regionDetails.add(regionDetail);
         }
 

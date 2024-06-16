@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private DatabaseReference reference;
     private List<Region> loadedRegions;
     private boolean zoom = false;
-    private boolean regionsLoaded = false; // Variável para verificar se as regiões foram carregadas
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         regionManager = new RegionManager();
         regionManager.start();
 
-        // Carregar regiões do Firebase ao iniciar o aplicativo
+        // Carrega as regiões do Firebase ao iniciar o aplicativo
         loadRegionsFromFirebase();
 
         addRegionButton.setOnClickListener(new View.OnClickListener() {
@@ -212,11 +211,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void loadRegionsFromFirebase() {
-        if (regionsLoaded) {
-            Toast.makeText(MainActivity.this, "Regiões já foram carregadas do Firebase.", Toast.LENGTH_SHORT).show();
-            return; // Sai do método se as regiões já foram carregadas
-        }
-
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Regiões");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -244,17 +238,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             }
 
                             region.setLoadedFromFirebase(true); // Marca a região como carregada do Firebase
-                            if (!loadedRegions.contains(region)) { // Verifica se a região já está carregada
-                                loadedRegions.add(region);
-                            }
+                            regions.add(region);
                             Log.d(TAG, "Região carregada: " + region.getType() + ", tipo: " + type);
                         } catch (Exception e) {
                             Log.e(TAG, "Erro ao carregar região do Firebase: ", e);
                         }
                     }
                 }
+                loadedRegions.clear(); // Limpa as regiões carregadas anteriormente
+                loadedRegions.addAll(regions); // Adiciona as novas regiões carregadas
                 regionManager.loadRegionsFromFirebase(regions); // Adiciona as regiões carregadas na manager
-                regionsLoaded = true; // Marca que as regiões foram carregadas
                 Toast.makeText(MainActivity.this, "Regiões carregadas do Firebase.", Toast.LENGTH_SHORT).show();
             }
 
@@ -266,11 +259,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void loadRegionsFromFirebaseAndShow() {
-        if (!regionsLoaded) {
-            loadRegionsFromFirebase();
-        } else {
-            showRegions();
-        }
+        loadRegionsFromFirebase();
+        showRegions();
     }
 
     @Override

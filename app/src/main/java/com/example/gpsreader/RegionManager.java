@@ -15,6 +15,7 @@ import java.util.concurrent.Semaphore;
 
 public class RegionManager extends Thread {
     private final ArrayBlockingQueue<Region> regionQueue;
+    private final List<Region> processedRegions; // Lista de regiões processadas (inclui carregadas do Firebase)
     private final Semaphore semaphore;
     private boolean running = true;
     private static final int MIN_DISTANCE_METERS = 30;
@@ -24,6 +25,7 @@ public class RegionManager extends Thread {
 
     public RegionManager() {
         this.regionQueue = new ArrayBlockingQueue<>(100); // Fila de até 100 elementos
+        this.processedRegions = new CopyOnWriteArrayList<>(); // Lista de regiões processadas
         this.semaphore = new Semaphore(1);
     }
 
@@ -33,7 +35,8 @@ public class RegionManager extends Thread {
             boolean isDuplicateRegion = false;
             boolean isSubRestrictedRegion = false;
 
-            for (Region processedRegion : regionQueue) {
+            // Verifica se a região é duplicada ou está muito próxima de uma região processada
+            for (Region processedRegion : processedRegions) {
                 float distance = processedRegion.calculateDistance(region.getLatitude(), region.getLongitude());
                 if (distance < MIN_DISTANCE_METERS) {
                     if (distance > MIN_SUBRESTRICTED_DISTANCE_METERS) {
@@ -62,6 +65,7 @@ public class RegionManager extends Thread {
                 if (!region.isLoadedFromFirebase()) {
                     regionQueue.offer(region); // Adiciona a região na fila
                 }
+                processedRegions.add(region); // Adiciona a região à lista de regiões processadas
                 notification = true;
                 System.out.println("Região adicionada: " + region.getClass().getSimpleName());
             } else {
@@ -112,9 +116,7 @@ public class RegionManager extends Thread {
             semaphore.acquire();
             for (Region region : regions) {
                 region.setLoadedFromFirebase(true);
-                if (!regionQueue.contains(region)) { // Evita duplicatas na fila
-                    regionQueue.offer(region);
-                }
+                processedRegions.add(region); // Adiciona as regiões carregadas do Firebase à lista de regiões processadas
             }
             semaphore.release();
         } catch (InterruptedException e) {

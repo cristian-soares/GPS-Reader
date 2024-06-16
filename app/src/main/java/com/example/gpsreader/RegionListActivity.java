@@ -38,7 +38,9 @@ public class RegionListActivity extends AppCompatActivity {
             String regionDetail = "Nome: " + region.getName() + "\n" +
                     "Latitude: " + region.getLatitude() + "\n" +
                     "Longitude: " + region.getLongitude() + "\n" +
-                    "Tipo: " + regionType;
+                    "Tipo: " + regionType + "\n" +
+                    "Usuário: " + region.getUser() + "\n" +
+                    "Timestamp: " + region.getTimestamp();
             regionDetails.add(regionDetail);
         }
 

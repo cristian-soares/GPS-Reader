@@ -22,15 +22,6 @@ public class Region implements Serializable {
         this.type = "Region"; // Define o tipo padrão
     }
 
-    public Region(String name, double latitude, double longitude, int user, long timestamp) {
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.user = user;
-        this.timestamp = timestamp;
-        this.type = "Region"; // Define o tipo padrão
-    }
-
     public String getName() {
         return name;
     }

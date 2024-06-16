@@ -9,7 +9,7 @@ public class Region implements Serializable {
     protected double latitude;
     protected double longitude;
     protected int user;
-    protected long timestamp; // Novo campo
+    protected long timestamp;
     private boolean loadedFromFirebase;
     private String type;
 

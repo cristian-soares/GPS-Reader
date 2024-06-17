@@ -222,24 +222,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     if (encryptedRegionJson != null) {
                         try {
                             String regionJson = Cryptography.decrypt(encryptedRegionJson);
-                            JsonObject jsonObject = JsonParser.parseString(regionJson).getAsJsonObject();
-                            String type = jsonObject.get("type").getAsString();
-                            Region region;
-                            switch (type) {
-                                case "SubRegion":
-                                    region = gson.fromJson(regionJson, SubRegion.class);
-                                    break;
-                                case "RestrictedRegion":
-                                    region = gson.fromJson(regionJson, RestrictedRegion.class);
-                                    break;
-                                default:
-                                    region = gson.fromJson(regionJson, Region.class);
-                                    break;
+                            Region region = gson.fromJson(regionJson, Region.class);
+
+                            // Verifica o tipo de região usando instanceof
+                            if (region instanceof SubRegion) {
+                                region = gson.fromJson(regionJson, SubRegion.class);
+                            } else if (region instanceof RestrictedRegion) {
+                                region = gson.fromJson(regionJson, RestrictedRegion.class);
                             }
 
                             region.setLoadedFromFirebase(true); // Marca a região como carregada do Firebase
                             regions.add(region);
-                            Log.d(TAG, "Região carregada: " + region.getType() + ", tipo: " + type);
+                            Log.d(TAG, "Região carregada: " + region.getType() + ", tipo: " + region.getClass().getSimpleName());
                         } catch (Exception e) {
                             Log.e(TAG, "Erro ao carregar região do Firebase: ", e);
                         }
@@ -257,6 +251,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
+
 
     private void loadRegionsFromFirebaseAndShow() {
         loadRegionsFromFirebase();

@@ -38,7 +38,7 @@ publishing {
 
             pom {
                 name.set("Android Library")
-                description.set("An example Android library")
+                description.set("The Android library used in this project")
                 url.set("https://github.com/cristian-soares/GPS-Reader")
                 licenses {
                     license {

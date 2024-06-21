@@ -27,6 +27,53 @@ android {
     }
 }
 
+publishing {
+    publications {
+        bar(MavenPublication) {
+            groupId = 'com.example.android_lib'
+            artifactId = 'android_lib'
+            version = '1.0.0'
+
+            artifact("$buildDir/outputs/aar/android_lib-release.aar")
+
+            pom {
+                name.set("Android Library")
+                description.set("An example Android library")
+                url.set("https://github.com/cristian-soares/GPS-Reader")
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("cristian-soares")
+                        name.set("Cristian Soares")
+                        email.set("cmatheussoares@gmail.com")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/cristian-soares/GPS-Reader.git")
+                    developerConnection.set("scm:git:ssh://github.com/cristian-soares/GPS-Reader.git")
+                    url.set("https://github.com/cristian-soares/GPS-Reader")
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/cristian-soares/GPS-Reader")
+            credentials {
+                username = System.getenv("USERNAME")
+                password = System.getenv("GPR_TOKEN")
+            }
+        }
+    }
+}
+
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.6.1'

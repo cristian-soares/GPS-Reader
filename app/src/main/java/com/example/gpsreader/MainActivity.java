@@ -212,9 +212,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void loadRegionsFromFirebase() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Regiões");
+        long startTime = System.currentTimeMillis(); // Início da medição
+
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                //--------------------------------------------------------------------------
+                //Implementação Tareaf 4
+                long endTime = System.currentTimeMillis(); // Fim da medição
+                long executionTime = endTime - startTime;
+                Log.d("MainActivity", "Tempo de execução da Tarefa 5 (Busca de Dados): " + executionTime + " ms");
+                //---------------------------------------------------------------------------
+
                 Gson gson = new Gson();
                 List<Region> regions = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {

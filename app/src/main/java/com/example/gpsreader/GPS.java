@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 
@@ -69,6 +70,7 @@ public class GPS extends Thread {
     }
 
     public void getLastLocation(OnSuccessListener<Location> onSuccessListener) {
+        long startTime = System.currentTimeMillis(); // Início da medição
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -76,6 +78,14 @@ public class GPS extends Thread {
 
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
         task.addOnSuccessListener(location -> {
+
+            //------------------------------------------
+            //Implementação Tarefa 4
+            long endTime = System.currentTimeMillis(); // Fim da medição
+            long executionTime = endTime - startTime;
+            Log.d("GPS", "Tempo de execução da Tarefa 1 (Leitura de Localização): " + executionTime + " ms");
+            //-------------------------------------------
+
             if (location != null) {
                 currentLatitude = location.getLatitude();
                 currentLongitude = location.getLongitude();

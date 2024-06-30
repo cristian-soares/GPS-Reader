@@ -1,5 +1,7 @@
 package com.example.gpsreader;
 
+import android.util.Log;
+
 import com.example.android_lib.Region;
 import com.example.android_lib.SubRegion;
 import com.example.android_lib.RestrictedRegion;
@@ -30,6 +32,7 @@ public class RegionManager extends Thread {
     }
 
     public void addRegion(Region region) {
+        long startTime = System.currentTimeMillis(); // Início da medição
         try {
             semaphore.acquire();
             boolean isDuplicateRegion = false;
@@ -76,6 +79,13 @@ public class RegionManager extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        //-----------------------------------------------------
+        //Implementação Tarefa 4
+        long endTime = System.currentTimeMillis(); // Fim da medição
+        long executionTime = endTime - startTime;
+        Log.d("RegionManager", "Tempo de execução da Tarefa 2 (Inserção de Regiões): " + executionTime + " ms");
+        //------------------------------------------------------
     }
 
     public boolean getNotification() {
